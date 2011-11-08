@@ -20,10 +20,10 @@
       $('.maxlength', context).once('maxlength', function() {
         var options = {};
         options['counterText'] = $(this).attr('maxlength_js_label');  
-        if ($(this).hasClass('maxlength_js_cut_text')) {
+        if ($(this).hasClass('maxlength_js_enforce')) {
           options['enforce'] = true;
         }
-        if ($(this).hasClass('maxlength_js_cut_html')) {
+        if ($(this).hasClass('maxlength_js_truncate_html')) {
           options['truncateHtml'] = true;
         }
         $(this).charCount(options);
@@ -77,7 +77,7 @@
         if (wysiwyg != undefined) {
           if (typeof ml[getter] == 'function' && typeof ml[setter] == 'function') {
             if (options.truncateHtml) {
-              ml[setter](wysiwyg, ml.cut_html_text(ml[getter](wysiwyg), limit));
+              ml[setter](wysiwyg, ml.truncate_html(ml[getter](wysiwyg), limit));
               count = ml.strip_tags(ml[getter](wysiwyg)).length;
             } else {
               ml[setter](wysiwyg, ml[getter](wysiwyg).substr(0, limit));
@@ -86,7 +86,7 @@
           }
         } else {
           if (options.truncateHtml) {
-            obj.val(ml.cut_html_text(obj.val(), limit));
+            obj.val(ml.truncate_html(obj.val(), limit));
             // Re calculate text length
             count = ml.strip_tags(obj.val()).length;
           } else {
@@ -137,7 +137,7 @@
   /**
    * Cuts a html text up to limit characters. Still experimental.
    */
-  ml.cut_html_text = function(text, limit) {
+  ml.truncate_html = function(text, limit) {
     // The html result after cut.
     var result_html = '';
     // The text result, that will actually used when counting characters.
@@ -281,13 +281,13 @@
           // the editor is on a maxlength field
           var editor = $('#' + ed.editorId + '.maxlength');
           if (editor.length == 1) {
-            if (editor.hasClass('maxlength_js_cut_text')) {
+            if (editor.hasClass('maxlength_js_enforce')) {
               ml.options[ed.editorId].enforce = true;
             } else {
               ml.options[ed.editorId].enforce = false;
             }
             // Check if we should strip the tags when counting.
-            if (editor.hasClass('maxlength_js_cut_html')) {
+            if (editor.hasClass('maxlength_js_truncate_html')) {
               ml.options[ed.editorId].truncateHtml = true;
             } else {
               ml.options[ed.editorId].truncateHtml = false;
@@ -339,13 +339,13 @@
       CKEDITOR.on('instanceReady', function(e) {
         var editor = $('#' + e.editor.name + '.maxlength');
         if (editor.length == 1) {
-          if (editor.hasClass('maxlength_js_cut_text')) {
+          if (editor.hasClass('maxlength_js_enforce')) {
             ml.options[e.editor.element.getId()].enforce = true;
           } else {
             ml.options[e.editor.element.getId()].enforce = false;
           }
           // Check if we should strip the tags when counting.
-          if (editor.hasClass('maxlength_js_cut_html')) {
+          if (editor.hasClass('maxlength_js_truncate_html')) {
             ml.options[e.editor.element.getId()].truncateHtml = true;
           } else {
             ml.options[e.editor.element.getId()].truncateHtml = false;
