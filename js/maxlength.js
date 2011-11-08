@@ -58,7 +58,12 @@
     var limit = parseInt(obj.attr('maxlength'));
 
     if (count == undefined) {
-      count = ml.strip_tags(obj.val()).length;
+      if (options.truncateHtml) {
+        count = ml.strip_tags(obj.val()).length;
+      }
+      else {
+        count = obj.val().length;
+      }
     }
 
     var available = limit - count;
