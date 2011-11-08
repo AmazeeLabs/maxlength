@@ -82,11 +82,13 @@
         if (wysiwyg != undefined) {
           if (typeof ml[getter] == 'function' && typeof ml[setter] == 'function') {
             if (options.truncateHtml) {
-              ml[setter](wysiwyg, ml.truncate_html(ml[getter](wysiwyg), limit));
-              count = ml.strip_tags(ml[getter](wysiwyg)).length;
+              var new_html = ml.truncate_html(ml[getter](wysiwyg), limit)
+              ml[setter](wysiwyg, new_html);
+              count = ml.strip_tags(new_html).length;
             } else {
-              ml[setter](wysiwyg, ml[getter](wysiwyg).substr(0, limit));
-              count = ml[getter](wysiwyg).length;
+              var new_html = ml[getter](wysiwyg).substr(0, limit);
+              ml[setter](wysiwyg, new_html);
+              count = new_html.length;
             }
           }
         } else {
