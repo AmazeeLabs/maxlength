@@ -359,13 +359,13 @@
           }
           // Add the events on the editor.
           e.editor.on('key', function(e) {
-            setTimeout(function(){ml.ckeditorChange(e)}, 500);
+            setTimeout(function(){ml.ckeditorChange(e)}, 100);
           });
           e.editor.on('paste', function(e) {
             setTimeout(function(){ml.ckeditorChange(e)}, 500);
           });
           e.editor.on('elementsPathUpdate', function(e) {
-            setTimeout(function(){ml.ckeditorChange(e)}, 500);
+            setTimeout(function(){ml.ckeditorChange(e)}, 100);
           });
         }
       });
