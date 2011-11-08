@@ -62,7 +62,7 @@
         count = ml.strip_tags(obj.val()).length;
       }
       else {
-        count = obj.val().length;
+        count = ml.twochar_lineending(obj.val()).length;
       }
     }
 
@@ -99,7 +99,7 @@
           } else {
             obj.val(obj.val().substr(0, limit));
             // Re calculate text length
-            count = obj.val().length;
+            count = ml.twochar_lineending(obj.val()).length;
           }
         }
       }
@@ -113,21 +113,20 @@
   };
 
   /**
-   * Calculate the length of a string using PHP-calculation to count new lines
+   * Replaces line ending with to chars, because PHP-calculation counts with two chars
    * as two characters.
    *
    * @see http://www.sitepoint.com/blogs/2004/02/16/line-endings-in-javascript/
    */
-  ml.strlen = function(str) {
-    return str.replace(/(\r\n|\r|\n)/g, "\r\n").length;
+  ml.twochar_lineending = function(str) {
+    return str.replace(/(\r\n|\r|\n)/g, "\r\n");
   };
   
   ml.strip_tags = function(input, allowed) {
-     // Strips new line
-     // At the moment, this causes problems with the counting for textareas.
-     // Needs some more research.
-     //input = input.replace(/[\n\r\t]/g, '');
-     input = input.replace('&nbsp;', ' ');
+    // making the lineendings with two chars
+    input = ml.twochar_lineending(input);
+    // We do want that the space characters to count as 1, not 6...
+    input = input.replace('&nbsp;', ' ');
      //input = input.split(' ').join('');
     // Strips HTML and PHP tags from a string
      allowed = (((allowed || "") + "")
@@ -151,6 +150,8 @@
     var result_text = '';
     // A stack that will keep the tags that are open at a given time.
     var tags_open = new Array();
+    // making the lineendings with two chars
+    text = ml.twochar_lineending(text);
     // We do want that the space characters to count as 1, not 6...
     text = text.replace('&nbsp;', ' ');
     while (result_text.length < limit && text.length > 0) {
@@ -320,7 +321,7 @@
       ml.calculate($(ed.getElement()), options, ml.strip_tags(ml.tinymceGetData(ed)).length, ed, 'tinymceGetData', 'tinymceSetData');
     }
     else {
-      ml.calculate($(ed.getElement()), options, ml.tinymceGetData(ed).length, ed, 'tinymceGetData', 'tinymceSetData');
+      ml.calculate($(ed.getElement()), options, ml.twochar_lineending(ml.tinymceGetData(ed)).length, ed, 'tinymceGetData', 'tinymceSetData');
     }
   };
   
@@ -379,7 +380,7 @@
       ml.calculate($('#' + e.editor.element.getId()), options, ml.strip_tags(ml.ckeditorGetData(e)).length, e, 'ckeditorGetData', 'ckeditorSetData');
     }
     else {
-      ml.calculate($('#' + e.editor.element.getId()), options, ml.ckeditorGetData(e).length, e, 'ckeditorGetData', 'ckeditorSetData');
+      ml.calculate($('#' + e.editor.element.getId()), options, ml.twochar_lineending(ml.ckeditorGetData(e)).length, e, 'ckeditorGetData', 'ckeditorSetData');
     }
   };
   
