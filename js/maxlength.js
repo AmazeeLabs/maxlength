@@ -364,6 +364,9 @@
           e.editor.on('paste', function(e) {
             setTimeout(function(){ml.ckeditorChange(e)}, 500);
           });
+          e.editor.on('elementsPathUpdate', function(e) {
+            setTimeout(function(){ml.ckeditorChange(e)}, 500);
+          });
         }
       });
     }
