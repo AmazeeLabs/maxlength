@@ -206,8 +206,9 @@ function maxlength_form_node_type_form_alter(&$form, &$form_state, $form_id) {
   $form['submission']['maxlength_js'] = array(
     '#type' => 'textfield',
     '#title' => 'Maxlength JS',
-    '#description' => t('The maximum length of the field in characters.'),
+    '#description' => t('The maximum length of the field in characters. Can be maximum 255 characters.'),   
     '#default_value' => variable_get('maxlength_js_' . $form['#node_type']->type, ''),
+    '#element_validate' => array('maxlength_node_title_validate'),
   );
   $form['submission']['maxlength_js_label'] = array(
     '#type' => 'textarea',
@@ -216,4 +217,16 @@ function maxlength_form_node_type_form_alter(&$form, &$form_state, $form_id) {
     '#default_value' =>  variable_get('maxlength_js_label_' . $form['#node_type']->type, MAXLENGTH_DEFAULT_JS_LABEL),
     '#description' => t('The text used in the Javascript message under the input, where "@limit", "@remaining" and "@count" are replaced by the appropriate numbers.'),
   );
+}
+
+/**
+ * Checks if the title field of the node is not set to more then 255 chars, because Drupal Core cannot handle this
+ */
+function maxlength_node_title_validate($element, &$form_state, $form) { 
+   if (isset($element['#value']) && !is_numeric($element['#value'])) {
+     form_error($element, t('This field needs to be numeric'));
+   } 
+   if (isset($element['#value']) && is_numeric($element['#value']) && $element['#value'] > 255) {
+     form_error($element, t('Note titles can be maximum 255 characters long.'));
+   }   
 }
