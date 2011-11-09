@@ -223,10 +223,10 @@ function maxlength_form_node_type_form_alter(&$form, &$form_state, $form_id) {
  * Checks if the title field of the node is not set to more then 255 chars, because Drupal Core cannot handle this
  */
 function maxlength_node_title_validate($element, &$form_state, $form) { 
-   if (isset($element['#value']) && !is_numeric($element['#value'])) {
+   if (!empty($element['#value']) && !is_numeric($element['#value'])) {
      form_error($element, t('This field needs to be numeric'));
    } 
-   if (isset($element['#value']) && is_numeric($element['#value']) && $element['#value'] > 255) {
+   if (!empty($element['#value']) && is_numeric($element['#value']) && $element['#value'] > 255) {
      form_error($element, t('Note titles can be maximum 255 characters long.'));
    }   
 }
