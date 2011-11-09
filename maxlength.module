@@ -202,21 +202,26 @@ function maxlength_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_form_node_type_alter().
  */
 function maxlength_form_node_type_form_alter(&$form, &$form_state, $form_id) {
-  // Add maxlength setting to node type form
-  $form['submission']['maxlength_js'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Maxlength JS',
-    '#description' => t('The maximum length of the field in characters. Can be maximum 255 characters.'),   
-    '#default_value' => variable_get('maxlength_js_' . $form['#node_type']->type, ''),
-    '#element_validate' => array('maxlength_node_title_validate'),
-  );
-  $form['submission']['maxlength_js_label'] = array(
-    '#type' => 'textarea',
-    '#rows' => 2,
-    '#title' => t('Count down message'),
-    '#default_value' =>  variable_get('maxlength_js_label_' . $form['#node_type']->type, MAXLENGTH_DEFAULT_JS_LABEL),
-    '#description' => t('The text used in the Javascript message under the input, where "@limit", "@remaining" and "@count" are replaced by the appropriate numbers.'),
-  );
+  $type = $form['#node_type']->type;
+  // If the Title Module is enabled and the Title Field is Replaced the maxlength Module
+  // we don't need this functionality any more, because the title is now a field itself
+  if (!module_exists('title') || title_field_replacement_enabled('node', $type, 'title') !== TRUE) {
+    // Add maxlength setting to node type form
+    $form['submission']['maxlength_js'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Maxlength JS',
+      '#description' => t('The maximum length of the field in characters. Can be maximum 255 characters.'),   
+      '#default_value' => variable_get('maxlength_js_' . $form['#node_type']->type, ''),
+      '#element_validate' => array('maxlength_node_title_validate'),
+    );
+    $form['submission']['maxlength_js_label'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#title' => t('Count down message'),
+      '#default_value' =>  variable_get('maxlength_js_label_' . $form['#node_type']->type, MAXLENGTH_DEFAULT_JS_LABEL),
+      '#description' => t('The text used in the Javascript message under the input, where "@limit", "@remaining" and "@count" are replaced by the appropriate numbers.'),
+    ); 
+  }
 }
 
 /**
