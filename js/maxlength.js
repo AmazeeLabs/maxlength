@@ -122,11 +122,14 @@
     return str.replace(/(\r\n|\r|\n)/g, "\r\n");
   };
 
-  ml.strip_tags = function(input, allowed) {
+  ml.strip_tags = function(input, allowed, trim) {
     // making the lineendings with two chars
     input = ml.twochar_lineending(input);
     // We do want that the space characters to count as 1, not 6...
     input = input.replace('&nbsp;', ' ');
+    if (trim !== false) {
+      input = $.trim(input);
+    }
      //input = input.split(' ').join('');
     // Strips HTML and PHP tags from a string
      allowed = (((allowed || "") + "")
@@ -273,11 +276,17 @@
     }
 
     ml.calculate($(this), options);
+    // We want to execute this only in source mode, so when the textarea is
+    /// visible, otherwise it will conflict with the wysiwyg change event.
     $(this).keyup(function() {
-      ml.calculate($(this), options);
+      if ($(this).is(':visible')) {
+        ml.calculate($(this), options);
+      }
     });
     $(this).change(function() {
-      ml.calculate($(this), options);
+      if ($(this).is(':visible')) {
+        ml.calculate($(this), options);
+      }
     });
 
   };
