@@ -235,7 +235,12 @@ function maxlength_validate_input(&$element, &$form_state) {
   if (isset($element['#attributes']['maxlength']) && isset($element['#value'])) {
     // Compute the length of the text, without counting the tags, and consider
     // the "enter" characters as only one character.
-    $value = filter_xss(str_replace(array("\r\n", '&nbsp;'), array(' ', ' '), $element['#value']), array());
+    $value = str_replace(array("\r\n", '&nbsp;'), array(' ', ' '), $element['#value']);
+    // Additionally, we decode all the html entities and filter out all the html
+    // tags.
+    // @todo: add suppport for the case when we have to actually count also the
+    // html tags.
+    $value = trim(html_entity_decode(filter_xss($value, array())));
     if (drupal_strlen($value) > $element['#attributes']['maxlength']) {
       form_error($element, t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($element['#title']) ? $element['#parents'][0] : $element['#title'], '%max' => $element['#attributes']['maxlength'], '%length' => drupal_strlen($value))));
     }

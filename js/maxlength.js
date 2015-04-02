@@ -125,11 +125,8 @@
   ml.strip_tags = function(input, allowed, trim) {
     // making the lineendings with two chars
     input = ml.twochar_lineending(input);
-    // We do want that the space characters to count as 1, not 6...
-    input = input.replace('&nbsp;', ' ');
-    if (trim !== false) {
-      input = $.trim(input);
-    }
+    // Decode all html encoded entities like space, '<', '>', and so on.
+	input = $('<textarea />').html(input).text();
      //input = input.split(' ').join('');
     // Strips HTML and PHP tags from a string
      allowed = (((allowed || "") + "")
@@ -138,9 +135,13 @@
          .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
      var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
          commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-     return input.replace(commentsAndPhpTags, '').replace(tags, function($0, $1){
+     var result =  input.replace(commentsAndPhpTags, '').replace(tags, function($0, $1){
          return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
      });
+     if (trim !== false) {
+       result = $.trim(result);
+     }
+     return result;
   };
 
   /**
@@ -155,8 +156,8 @@
     var tags_open = new Array();
     // making the lineendings with two chars
     text = ml.twochar_lineending(text);
-    // We do want that the space characters to count as 1, not 6...
-    text = text.replace('&nbsp;', ' ');
+    // Decode all html encoded entities like space, '<', '>', and so on.
+	input = $('<textarea />').html(input).text();
     while (result_text.length < limit && text.length > 0) {
       switch (text.charAt(0)) {
         case '<': {
